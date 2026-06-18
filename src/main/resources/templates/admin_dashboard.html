@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Admin Dashboard - Fintech IAM</title>
+
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+    <style>
+
+
+:root{
+
+    --olive:#556b2f;
+    --olive-light:#6b8e23;
+    --bg:#f4f7ef;
+
+}
+
+
+
+body{
+
+    background:var(--bg);
+    font-family:'Segoe UI',sans-serif;
+
+}
+
+
+
+/* HEADER */
+
+
+.page-header{
+
+    background:linear-gradient(135deg,#556b2f,#8aaa5a);
+
+    color:white;
+
+    padding:35px;
+
+    border-radius:0 0 35px 35px;
+
+    margin-bottom:35px;
+
+}
+
+
+
+
+
+.page-header h1{
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* CARDS */
+
+
+.card{
+
+    border:none;
+
+    border-radius:25px;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+
+    padding:20px;
+
+}
+
+
+
+
+
+.card-title{
+
+    color:#44551f;
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* BUTTON */
+
+
+.btn-olive{
+
+
+    background:#6b8e23;
+
+    color:white;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:10px 25px;
+
+    transition:.3s;
+
+}
+
+
+
+.btn-olive:hover{
+
+    background:#556b2f;
+
+    color:white;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+
+
+/* TABLE */
+
+
+.table{
+
+    overflow:hidden;
+
+}
+
+
+
+.table thead{
+
+
+    background:#556b2f;
+
+    color:white;
+
+
+}
+
+
+
+.table tbody tr:hover{
+
+
+    background:#eef5df;
+
+}
+
+
+
+
+
+/* BADGE */
+
+
+.badge-agent{
+
+
+    background:#6b8e23;
+
+    color:white;
+
+    padding:8px 15px;
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
+
+
+/* MODAL */
+
+
+.modal-content{
+
+
+    border:none;
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+
+}
+
+
+
+.modal-header{
+
+
+    background:linear-gradient(135deg,#556b2f,#6b8e23);
+
+    color:white;
+
+
+}
+
+
+
+
+.form-control{
+
+
+    border-radius:12px;
+
+    padding:12px;
+
+
+}
+
+
+
+.form-control:focus{
+
+
+    border-color:#6b8e23;
+
+    box-shadow:0 0 0 .25rem rgba(107,142,35,.25);
+
+
+}
+
+
+
+
+</style>
+
+
+</head>
+
+
+
+
+<body>
+
+
+
+
+
+<!-- HEADER -->
+
+
+<div class="page-header container-fluid">
+
+
+    <h1>
+
+        <i class="bi bi-speedometer2"></i>
+
+        Administration Fintech IAM
+
+    </h1>
+
+
+    <p>
+
+        Gestion des agents - Audit des transactions
+
+    </p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="container">
+
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-box-arrow-left"></i> Déconnexion
+        </button>
+    </form>
+
+
+    <!-- GESTION AGENTS -->
+
+
+    <div class="card mb-4">
+
+
+        <div class="d-flex justify-content-between align-items-center">
+
+
+            <h4 class="card-title">
+
+                <i class="bi bi-people"></i>
+
+                Gestion des Agents
+
+            </h4>
+
+
+
+
+            <button class="btn btn-olive"
+
+                    data-bs-toggle="modal"
+
+                    data-bs-target="#agentModal">
+
+
+                <i class="bi bi-person-plus"></i>
+
+                Ajouter Agent
+
+
+            </button>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- LISTE AGENTS -->
+
+
+    <div class="card mb-4">
+
+
+        <h4 class="card-title mb-4">
+
+
+            <i class="bi bi-person-badge"></i>
+
+            Liste des Agents actifs
+
+
+        </h4>
+
+
+
+
+        <div class="table-responsive">
+
+
+            <table class="table table-hover align-middle">
+
+
+                <thead>
+
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Utilisateur</th>
+
+                    <th>Rôle</th>
+
+                    <th>Action</th>
+
+
+                </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+                <tr th:each="agent : ${agents}">
+                    <td th:text="${agent.id}"></td>
+                    <td class="fw-bold" th:text="${agent.username}">Nom Utilisateur</td>
+                    <td>
+                        <span class="badge-agent">AGENT</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger btn-sm rounded-3">
+                            <i class="bi bi-trash"></i> Supprimer
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- AUDIT -->
+
+
+    <div class="card mb-5">
+
+
+        <h4 class="card-title mb-4">
+
+
+            <i class="bi bi-clock-history"></i>
+
+            Audit des transactions
+
+
+        </h4>
+
+
+
+
+
+        <div class="table-responsive">
+
+
+            <table class="table table-hover align-middle">
+
+
+                <thead>
+
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Client</th>
+
+                    <th>Agent</th>
+
+                    <th>Type</th>
+
+                    <th>Montant</th>
+
+
+                </tr>
+
+
+                </thead>
+
+
+
+
+
+                <tbody>
+
+
+                <tr th:each="t:${transactions}">
+
+
+
+                    <td th:text="${#temporals.format(t.date,'dd/MM/yyyy HH:mm')}">
+
+                    </td>
+
+
+
+
+                    <td th:text="${t.client.nom} + ' ' + ${t.client.prenom}"></td>
+
+                    </td>
+
+
+
+
+                    <td class="fw-bold text-success"
+
+
+                        th:text="${t.agent != null ? t.agent.username : 'Système'}">
+
+                    </td>
+
+
+
+
+
+                    <td>
+
+
+<span class="badge bg-success rounded-pill"
+
+      th:text="${t.type}">
+
+</span>
+
+
+                    </td>
+
+
+
+
+
+                    <td class="fw-bold"
+
+
+                        th:text="${t.amount + ' FCFA'}">
+
+                    </td>
+
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- MODAL AJOUT AGENT -->
+
+    <div class="modal fade" id="agentModal" tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content border-0 shadow-lg rounded-5">
+
+
+                <!-- HEADER -->
+
+                <div class="modal-header text-white"
+                     style="background:linear-gradient(135deg,#556b2f,#6b8e23)">
+
+
+                    <h5 class="modal-title fw-bold">
+
+                        <i class="bi bi-person-plus-fill"></i>
+
+                        Inscrire un nouvel agent
+
+                    </h5>
+
+
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal">
+                    </button>
+
+
+                </div>
+
+
+
+
+
+                <!-- FORMULAIRE -->
+
+                <form th:action="@{/admin/agent/add}" method="post">
+
+
+                    <div class="modal-body p-5">
+
+
+                        <div class="row">
+
+
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-bold">
+                                    Nom
+                                </label>
+
+                                <input type="text"
+                                       name="nom"
+                                       class="form-control rounded-4 p-3"
+                                       placeholder="Ex: Traoré"
+                                       required>
+
+                            </div>
+
+
+
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-bold">
+                                    Prénom
+                                </label>
+
+                                <input type="text"
+                                       name="prenom"
+                                       class="form-control rounded-4 p-3"
+                                       placeholder="Ex: Moussa"
+                                       required>
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div class="row">
+
+
+                            <div class="col-md-6 mb-4">
+
+
+                                <label class="form-label fw-bold">
+
+                                    Nom utilisateur
+
+                                </label>
+
+
+                                <div class="input-group">
+
+
+                                <span class="input-group-text rounded-start-4"
+                                      style="background:#eef5df">
+
+                                    <i class="bi bi-person"></i>
+
+                                </span>
+
+
+                                    <input type="text"
+                                           name="username"
+                                           class="form-control rounded-end-4 p-3"
+                                           placeholder="Username"
+                                           required>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+                            <div class="col-md-6 mb-4">
+
+
+                                <label class="form-label fw-bold">
+
+                                    Téléphone
+
+                                </label>
+
+
+                                <input type="tel"
+                                       name="telephone"
+                                       class="form-control rounded-4 p-3"
+                                       placeholder="77 00 00 00"
+                                       required>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+                        <div class="row">
+
+
+                            <div class="col-md-6 mb-4">
+
+
+                                <label class="form-label fw-bold">
+
+                                    Email
+
+                                </label>
+
+
+                                <input type="email"
+                                       name="email"
+                                       class="form-control rounded-4 p-3"
+                                       placeholder="email@gmail.com">
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="col-md-6 mb-4">
+
+
+                                <label class="form-label fw-bold">
+
+                                    Mot de passe
+
+                                </label>
+
+
+                                <input type="password"
+                                       name="password"
+                                       class="form-control rounded-4 p-3"
+                                       placeholder="********"
+                                       required>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+
+                        <input type="hidden"
+                               name="role"
+                               value="AGENT">
+
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <!-- FOOTER -->
+
+
+                    <div class="modal-footer px-5 pb-4">
+
+
+                        <button type="button"
+                                class="btn btn-light rounded-4 px-4"
+                                data-bs-dismiss="modal">
+
+
+                            Annuler
+
+
+                        </button>
+
+
+
+
+
+                        <button type="submit"
+                                class="btn text-white rounded-4 px-5"
+                                style="background:#6b8e23">
+
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Enregistrer l'Agent
+
+
+                        </button>
+
+
+
+                    </div>
+
+
+
+
+                </form>
+
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+
+</html>

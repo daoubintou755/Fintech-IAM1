@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Effectuer un Dépôt</h2>
+<form th:action="@{/depots/enregistrer}" th:object="${depot}" method="post">
+    <label>Montant :</label>
+    <input type="number" th:field="*{montant}" required />
+
+    <label>Client :</label>
+    <select th:field="*{client.id}">
+        <option th:each="c : ${clients}" th:value="${c.id}" th:text="${c.nom}"></option>
+    </select>
+
+    <button type="submit">Valider le dépôt</button>
+</form>
+</body>
+</html>
